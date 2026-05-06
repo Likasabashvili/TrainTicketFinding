@@ -10,6 +10,7 @@ import { Service } from '../service';
 })
 export class Home implements OnInit {
   stations: any[] = [];
+
   constructor(private service: Service) {}
 
   ngOnInit() {
@@ -18,6 +19,7 @@ export class Home implements OnInit {
 
   fetchStations() {
     this.service.getStations().subscribe((data) => {
+      console.log(data);
       this.stations = data;
     });
   }

@@ -1,9 +1,7 @@
-  <h2>პროექტი მატარებლის ბილეთების ძებნის სადგურების შესახებ ინფორმაცია: </h2>
-@for (station of stations; track $index) {
-    <div>
-        <p>სადგურის სახელი: {{ station.name }}</p>
-        <p>სადგურის ID: {{station.id}}</p>
-        <p>სადგურის ნომერი: {{station.stationNumber}}</p>
-    </div>
-}
+<h2>პროექტი მატარებლის ბილეთების ძებნის სადგურების შესახებ ინფორმაცია:</h2>
 
+<div *ngFor="let station of stations">
+  <p>სადგურის სახელი: {{ station.name }}</p>
+  <p>სადგურის ID: {{ station.id }}</p>
+  <p>სადგურის ნომერი: {{ station.stationNumber }}</p>
+</div>
