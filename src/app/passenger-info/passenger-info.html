@@ -1,0 +1,140 @@
+<div class="passenger-info-container">
+  <div class="header">
+    <button (click)="goBack()" class="back-btn">← უკან</button>
+    <h2>მგზავრების მონაცემები</h2>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="form-section">
+      <div class="contact-info">
+        <h3>საკონტაქტო ინფორმაცია</h3>
+        <div class="form-group">
+          <label>ელფოსტა</label>
+          <input [(ngModel)]="email" type="email" placeholder="example@mail.com" />
+        </div>
+        <div class="form-group">
+          <label>ტელეფონის ნომერი</label>
+          <input [(ngModel)]="phoneNumber" type="tel" placeholder="+995 5XX XXX XXX" />
+        </div>
+      </div>
+
+      <div class="passenger-count">
+        <h3>მგზავრების რაოდენობა</h3>
+        <div class="form-group">
+          <select (change)="updatePassengerCount($any($event.target).value)">
+            <option [value]="1" [selected]="numberOfPassengers === 1">1 მგზავრი</option>
+            <option [value]="2" [selected]="numberOfPassengers === 2">2 მგზავრი</option>
+            <option [value]="3" [selected]="numberOfPassengers === 3">3 მგზავრი</option>
+            <option [value]="4" [selected]="numberOfPassengers === 4">4 მგზავრი</option>
+            <option [value]="5" [selected]="numberOfPassengers === 5">5 მგზავრი</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="passengers">
+        <h3>მგზავრების დეტალები</h3>
+        <div *ngFor="let passenger of passengers; let i = index" class="passenger-card">
+          <div class="passenger-header">
+            <span class="passenger-number">მგზავრი #{{ i + 1 }}</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>გვარი</label>
+              <input [(ngModel)]="passenger.surname" placeholder="გვარი" />
+            </div>
+            <div class="form-group">
+              <label>სახელი</label>
+              <input [(ngModel)]="passenger.name" placeholder="სახელი" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>პირადი ნომერი</label>
+            <input [(ngModel)]="passenger.idNumber" placeholder="00000000000" />
+          </div>
+
+          <div class="seat-selection">
+            <label>ადგილი: {{ passenger.seatNumber || 'არჩეული არ არის' }}</label>
+            <button (click)="openSeatSelection(i)" class="seat-select-btn">ადგილის არჩევა</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+      <button (click)="proceedToPayment()" [disabled]="!isFormValid()" class="proceed-btn">
+        გადახდის გვერდზე გადასვლა
+      </button>
+    </div>
+
+    <div class="invoice-section">
+      <div class="invoice">
+        <h3>ინვოისი</h3>
+        <div class="invoice-item" *ngFor="let passenger of passengers; let i = index">
+          <span>მგზავრი #{{ i + 1 }}: {{ passenger.seatNumber || 'ადგილი აირჩიოთ' }}</span>
+          <span *ngIf="passenger.seatId" class="price">
+            {{ calculateSeatPrice(passenger.seatId) }} ₾
+          </span>
+        </div>
+        <div class="invoice-total">
+          <strong>სულ:</strong>
+          <span class="total-price">{{ totalPrice }} ₾</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seat Selection Modal -->
+  <div *ngIf="showSeatModal" class="modal-overlay" (click)="closeSeatModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>ადგილის არჩევა</h3>
+        <button (click)="closeSeatModal()" class="close-btn">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Vagon Selection -->
+        <div class="vagon-selection">
+          <h4>ვაგონის არჩევა</h4>
+          <div class="vagon-list">
+            <button
+              *ngFor="let vagon of selectedTrain?.vagons"
+              (click)="selectVagon(vagon)"
+              [class.active]="selectedVagon?.id === vagon.id"
+              class="vagon-btn"
+            >
+              ვაგონი #{{ vagon.number }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Seats Grid -->
+        <div *ngIf="selectedVagon" class="seats-grid">
+          <h4>ადგილები ვაგონში {{ selectedVagon.number }}</h4>
+          <div class="seats-container">
+            <button
+              *ngFor="let seat of selectedVagon.seats"
+              (click)="selectSeat(seat)"
+              [class.occupied]="seat.isOccupied"
+              [class.selected]="selectedSeat?.seatId === seat.seatId"
+              [disabled]="seat.isOccupied"
+              class="seat-btn"
+            >
+              {{ seat.number }}
+              <span class="price">{{ seat.price }}₾</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirm Button -->
+        <div class="modal-footer">
+          <button (click)="closeSeatModal()" class="cancel-btn">გაუქმება</button>
+          <button (click)="confirmSeatSelection()" [disabled]="!selectedSeat" class="confirm-btn">
+            დადასტურება
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

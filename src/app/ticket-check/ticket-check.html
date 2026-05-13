@@ -1,0 +1,95 @@
+<div class="ticket-check-container">
+  <div class="header">
+    <button (click)="goHome()" class="home-btn">← მთავარი</button>
+    <h2>ბილეთის შემოწმება / გაუქმება</h2>
+  </div>
+
+  <div class="search-section">
+    <div class="search-card">
+      <h3>ბილეთის ძებნა</h3>
+
+      <div class="search-input-group">
+        <input
+          [(ngModel)]="ticketId"
+          type="text"
+          placeholder="შეიყვანეთ ბილეთის ID"
+          (keyup.enter)="checkTicket()"
+        />
+        <button (click)="checkTicket()" [disabled]="isLoading" class="search-btn">
+          <span *ngIf="!isLoading">შემოწმება</span>
+          <span *ngIf="isLoading">დაბეჭდვა...</span>
+        </button>
+      </div>
+
+      <div *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" class="success">
+        {{ successMessage }}
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="ticket" class="ticket-section">
+    <div class="ticket-card">
+      <div class="ticket-header">
+        <div>
+          <h3>ბილეთის დეტალები</h3>
+          <p class="ticket-id">ID: {{ ticket.id }}</p>
+        </div>
+        <div class="status" [class.confirmed]="ticket.confirmed">
+          {{ ticket.confirmed ? 'დადასტურებული' : 'მოითხოვს დადასტურებას' }}
+        </div>
+      </div>
+
+      <div class="ticket-details">
+        <div class="detail-section">
+          <h4>მარშრუტი</h4>
+          <p>
+            <strong>{{ ticket.train.from }} → {{ ticket.train.to }}</strong>
+          </p>
+          <p>რეისი: #{{ ticket.trainID }}</p>
+          <p>თარიღი: {{ ticket.date }}</p>
+          <p>გასვლა: {{ ticket.train.departure }}</p>
+          <p>ჩასვლა: {{ ticket.train.arrive }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h4>ალუბლიკი</h4>
+          <p>ელფოსტა: {{ ticket.email }}</p>
+          <p>ტელეფონი: {{ ticket.phone }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h4>მგზავრები</h4>
+          <div *ngFor="let person of ticket.persons" class="person-detail">
+            <span>{{ person.surname }} {{ person.name }}</span>
+            <span class="seat">{{ person.seat.number }}</span>
+            <span class="price">{{ person.seat.price }}₾</span>
+          </div>
+        </div>
+
+        <div class="detail-section total">
+          <h4>სულ:</h4>
+          <span class="total-price">{{ ticket.ticketPrice }} ₾</span>
+        </div>
+      </div>
+
+      <div class="ticket-actions">
+        <button
+          (click)="cancelTicket()"
+          [disabled]="isLoading || !ticket.confirmed"
+          class="cancel-btn"
+        >
+          ბილეთის გაუქმება
+        </button>
+        <button (click)="newSearch()" class="new-search-btn">ახალი ძებნა</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!ticket && !isLoading && !errorMessage" class="empty-state">
+    <p>ბილეთის დასამოწმებლად შეიყვანეთ ბილეთის ID</p>
+  </div>
+</div>

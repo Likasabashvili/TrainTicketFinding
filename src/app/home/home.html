@@ -1,7 +1,84 @@
-<h2>პროექტი მატარებლის ბილეთების ძებნის სადგურების შესახებ ინფორმაცია:</h2>
+<div class="home-container">
+  <div class="photo">
+    <div class="header-section">
+      <h1>მატარებლის ბილეთების ონლაინ შეძენა</h1>
+      <p>დაჯავშნე ბილეთები საუკეთესო ფასში!</p>
+    </div>
+  </div>
 
-<div *ngFor="let station of stations">
-  <p>სადგურის სახელი: {{ station.name }}</p>
-  <p>სადგურის ID: {{ station.id }}</p>
-  <p>სადგურის ნომერი: {{ station.stationNumber }}</p>
+  <div class="search-section">
+    <div class="search-card">
+      <h2>ძებნა</h2>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>საწყის ტერმინალი</label>
+          <select [(ngModel)]="fromStation">
+            <option value="">საიდან</option>
+            <option *ngFor="let station of stations" [value]="station.name">
+              {{ station.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>საბოლოო ტერმინალი</label>
+          <select [(ngModel)]="toStation">
+            <option value="">სადამდე</option>
+            <option *ngFor="let station of stations" [value]="station.name">
+              {{ station.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>თარიღი</label>
+          <input [(ngModel)]="travelDate" type="date" [min]="getToday()" />
+        </div>
+
+        <div class="form-group">
+          <label>მგზავრების რაოდენობა</label>
+          <select [(ngModel)]="numberOfPassengers">
+            <option [value]="1">1 მგზავრი</option>
+            <option [value]="2">2 მგზავრი</option>
+            <option [value]="3">3 მგზავრი</option>
+            <option [value]="4">4 მგზავრი</option>
+            <option [value]="5">5 მგზავრი</option>
+          </select>
+        </div>
+      </div>
+
+      <button
+        (click)="searchTrains()"
+        [disabled]="!isSearchFormValid() || isLoading"
+        class="search-btn"
+      >
+        <span *ngIf="!isLoading">მატარებლის მოძებნა</span>
+        <span *ngIf="isLoading">დაბეჭდვა...</span>
+      </button>
+
+      <button (click)="openTicketCheck()" class="ticket-check-btn">
+        ✓ ბილეთის შემოწმება/გაუქმება
+      </button>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-card">
+      <h3>🎫 სწრაფი დაჯავშნა</h3>
+      <p>აირჩიეთ თქვენი სახელმწიფო და დროი მათ ჩატვირთვაში</p>
+    </div>
+    <div class="info-card">
+      <h3>💳 უსაფრთხო გადახდა</h3>
+      <p>ყველა თქვენი ბიძგი და ფულადი ინფორმაცია დაცულია</p>
+    </div>
+    <div class="info-card">
+      <h3>🎯 მყისიერი დადასტურება</h3>
+      <p>მიიღეთ ელფოსტის გამოწერილი ბილეთი უბრალოდ რეგისტრაციის შემდეგ</p>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,14 @@
+<header class="app-header">
+  <div class="header-content">
+    <div class="logo-section">
+      <h1 class="logo">🚂 Train</h1>
+    </div>
+
+    <nav class="nav-menu">
+      <button (click)="goHome()" [class.active]="isHomePage()" class="nav-btn">მთავარი</button>
+      <button (click)="goToTicketCheck()" [class.active]="isTicketCheckPage()" class="nav-btn">
+        ბილეთის შემოწმება/გაუქმება
+      </button>
+    </nav>
+  </div>
+</header>

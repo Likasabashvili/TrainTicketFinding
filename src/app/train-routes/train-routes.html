@@ -1,0 +1,55 @@
+<div class="train-routes-container">
+  <div class="header">
+    <button (click)="goBack()" class="back-btn">← უკან</button>
+    <h2>მატარებლის რეისები</h2>
+  </div>
+
+  <div *ngIf="searchParams" class="search-info">
+    <p>
+      <strong>{{ searchParams.from }} → {{ searchParams.to }}</strong>
+    </p>
+    <p>თარიღი: {{ searchParams.date }}</p>
+    <p>მგზავრი: {{ searchParams.passengers }}</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">🔄 რეისების ძებნა მიმდინარეობს...</p>
+    <p class="loading-subtext">გთხოვთ ითმენოთ, მონაცემი ჩამოიტვირთება</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && departures.length > 0" class="departures-list">
+    <div *ngFor="let departure of departures" class="departure-group">
+      <h3>{{ departure.date }}</h3>
+      <div *ngFor="let train of departure.trains" class="train-card">
+        <div class="train-info">
+          <div class="train-header">
+            <span class="train-number">რეისი #{{ train.number }}</span>
+            <span class="train-name">{{ train.name }}</span>
+          </div>
+          <div class="route-info">
+            <span class="station">{{ train.from }}</span>
+            <span class="time">{{ train.departure }}</span>
+          </div>
+          <div class="route-info">
+            <span class="station">{{ train.to }}</span>
+            <span class="time">{{ train.arrive }}</span>
+          </div>
+        </div>
+        <button
+          (click)="bookTicket(train)"
+          class="book-btn"
+          [disabled]="!train.vagons || train.vagons.length === 0"
+        >
+          დაჯავშნა
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && departures.length === 0 && !errorMessage" class="no-results">
+    ხელმისაწვდომი რეისები არ მოიძებნა
+  </div>
+</div>

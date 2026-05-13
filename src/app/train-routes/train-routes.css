@@ -1,0 +1,362 @@
+.train-routes-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.15), transparent 25%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.08), transparent 20%),
+    linear-gradient(135deg, #0f172a 0%, #172554 40%, #1d4ed8 100%);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.header h2 {
+  margin: 0;
+  color: white;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.back-btn {
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.35s ease;
+  backdrop-filter: blur(12px);
+}
+
+.back-btn:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* SEARCH INFO */
+.search-info {
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+.search-info p {
+  margin: 10px 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 16px;
+}
+
+.search-info strong {
+  color: #93c5fd;
+}
+
+/* LOADING */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 40px;
+  text-align: center;
+  min-height: 400px;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #60a5fa;
+  border-right-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 30px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+  animation: pulse-text 1.5s ease-in-out infinite;
+}
+
+.loading-subtext {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  margin: 0;
+}
+
+@keyframes pulse-text {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* ERROR */
+.error {
+  padding: 18px;
+  margin-bottom: 24px;
+  border-radius: 18px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: white;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+/* NO RESULTS */
+.no-results {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+/* DEPARTURE LIST */
+.departures-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.departure-group h3 {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* TRAIN CARD */
+.train-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 26px;
+  margin-bottom: 18px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  transition: 0.35s ease;
+}
+
+.train-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(59, 130, 246, 0.12);
+}
+
+/* TRAIN INFO */
+.train-info {
+  flex: 1;
+}
+
+.train-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.train-number {
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #bfdbfe;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.train-name {
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ROUTE */
+.route-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  margin: 10px 0;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.station {
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.time {
+  color: #93c5fd;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* BOOK BUTTON */
+.book-btn {
+  min-width: 160px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.35s ease;
+  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.3);
+}
+
+.book-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(34, 197, 94, 0.45);
+}
+
+.book-btn:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .train-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .book-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .train-routes-container {
+    padding: 24px 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header h2 {
+    font-size: 30px;
+  }
+
+  .search-info {
+    padding: 22px;
+  }
+
+  .train-card {
+    padding: 22px;
+  }
+
+  .train-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .route-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .train-name {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h2 {
+    font-size: 24px;
+  }
+
+  .departure-group h3 {
+    font-size: 20px;
+  }
+
+  .train-card {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .book-btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .route-info {
+    padding: 12px 14px;
+  }
+}
