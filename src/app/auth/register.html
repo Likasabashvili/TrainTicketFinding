@@ -1,0 +1,72 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-glow"></div>
+
+    <p class="auth-eyebrow">ახალი ანგარიში</p>
+
+    <h2>რეგისტრაცია</h2>
+
+    <p class="auth-subtitle">შექმენი ანგარიში და დაჯავშნე მატარებლის ბილეთები მარტივად</p>
+
+    <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="success">
+      {{ successMessage }}
+    </div>
+
+    <label>
+      <span>სახელი</span>
+
+      <div class="input-wrapper">
+        <input type="text" placeholder="მაგ. ანა" [(ngModel)]="firstName" />
+      </div>
+    </label>
+
+    <label>
+      <span>გვარი</span>
+
+      <div class="input-wrapper">
+        <input type="text" placeholder="მაგ. აბაშიძე" [(ngModel)]="lastName" />
+      </div>
+    </label>
+
+    <label>
+      <span>ელფოსტა</span>
+
+      <div class="input-wrapper">
+        <input type="email" placeholder="name@example.com" [(ngModel)]="email" />
+      </div>
+    </label>
+
+    <label>
+      <span>ტელეფონი</span>
+
+      <div class="input-wrapper">
+        <input type="text" placeholder="+995 5XX XXX XXX" [(ngModel)]="phoneNumber" />
+      </div>
+    </label>
+
+    <label>
+      <span>პაროლი</span>
+
+      <div class="input-wrapper">
+        <input type="password" placeholder="შეიყვანე პაროლი" [(ngModel)]="password" />
+      </div>
+    </label>
+
+    <button (click)="register()" class="register-btn">
+      <span>რეგისტრაცია</span>
+    </button>
+
+    <div class="divider">
+      <span>ან</span>
+    </div>
+
+    <p class="auth-link">
+      უკვე გაქვს ანგარიში?
+      <a routerLink="/login">შესვლა</a>
+    </p>
+  </div>
+</div>

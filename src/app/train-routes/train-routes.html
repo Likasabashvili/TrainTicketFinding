@@ -15,7 +15,7 @@
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
     <p class="loading-text">🔄 რეისების ძებნა მიმდინარეობს...</p>
-    <p class="loading-subtext">გთხოვთ ითმენოთ, მონაცემი ჩამოიტვირთება</p>
+    <p class="loading-subtext">გთხოვთ მოითმინოთ, მონაცემი ჩამოიტვირთება</p>
   </div>
 
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
@@ -39,7 +39,7 @@
           </div>
         </div>
         <button
-          (click)="bookTicket(train)"
+          (click)="bookTicket(train, departure)"
           class="book-btn"
           [disabled]="!train.vagons || train.vagons.length === 0"
         >

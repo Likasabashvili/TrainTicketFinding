@@ -2,54 +2,49 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Service } from '../service';
-import { Train, Vagon, Seat, SearchParams, PassengerData, Departure } from '../models/interfaces';
+import { Departure, PassengerData, SearchParams, Seat, Train, Vagon } from '../models/interfaces';
 
 @Component({
   selector: 'app-passenger-info',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './passenger-info.html',
-  styleUrl: './passenger-info.css',
+  styleUrls: ['./passenger-info.css'],
 })
 export class PassengerInfoComponent implements OnInit {
   searchParams: SearchParams | null = null;
   selectedTrain: Train | null = null;
   selectedDeparture: Departure | null = null;
-
-  email = '';
-  phoneNumber = '';
   passengers: PassengerData[] = [];
   numberOfPassengers = 1;
-
+  email = '';
+  phoneNumber = '';
   selectedVagon: Vagon | null = null;
   selectedSeat: Seat | null = null;
   showSeatModal = false;
   currentPassengerIndex = -1;
-
-  errorMessage = '';
-  isLoading = false;
-
   totalPrice = 0;
+  errorMessage = '';
 
-  constructor(
-    private service: Service,
-    private router: Router,
-  ) {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras?.state) {
-      this.searchParams = navigation.extras.state['searchParams'];
-      this.selectedTrain = navigation.extras.state['selectedTrain'];
-      this.selectedDeparture = navigation.extras.state['selectedDeparture'];
-    }
+  constructor(private router: Router) {
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+
+    this.searchParams = state.searchParams;
+
+    this.selectedTrain = state.selectedTrain;
+
+    this.selectedDeparture = state.selectedDeparture;
+
+    this.numberOfPassengers = this.searchParams?.passengers || 1;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initializePassengers();
-    this.calculateTotalPrice();
   }
 
   initializePassengers() {
     this.passengers = [];
+
     for (let i = 0; i < this.numberOfPassengers; i++) {
       this.passengers.push({
         name: '',
@@ -62,30 +57,36 @@ export class PassengerInfoComponent implements OnInit {
   }
 
   updatePassengerCount(count: number | string) {
-    this.numberOfPassengers = Number(count);
+    this.numberOfPassengers = Number(count) || 1;
     this.initializePassengers();
     this.calculateTotalPrice();
   }
 
-  openSeatSelection(passengerIndex: number) {
-    if (!this.selectedTrain) return;
+  openSeatSelection(index: number) {
+    this.currentPassengerIndex = index;
 
-    this.currentPassengerIndex = passengerIndex;
+    this.selectedVagon = this.selectedTrain?.vagons[0] || null;
 
-    // Load first vagon with seats
-    if (this.selectedTrain.vagons && this.selectedTrain.vagons.length > 0) {
-      this.selectedVagon = this.selectedTrain.vagons[0];
-      this.showSeatModal = true;
-      this.selectedSeat = null;
-    }
+    this.showSeatModal = true;
   }
 
   selectVagon(vagon: Vagon) {
     this.selectedVagon = vagon;
-    this.selectedSeat = null;
   }
 
   selectSeat(seat: Seat) {
+    if (seat.isOccupied) return;
+
+    const alreadySelected = this.passengers.some(
+      (p, index) => p.seatId === seat.seatId && index !== this.currentPassengerIndex,
+    );
+
+    if (alreadySelected) {
+      this.errorMessage = 'ადგილი უკვე არჩეულია';
+
+      return;
+    }
+
     this.selectedSeat = seat;
   }
 
@@ -95,78 +96,81 @@ export class PassengerInfoComponent implements OnInit {
       return;
     }
 
-    if (this.currentPassengerIndex >= 0 && this.passengers[this.currentPassengerIndex]) {
-      this.passengers[this.currentPassengerIndex].seatId = this.selectedSeat.seatId;
-      this.passengers[this.currentPassengerIndex].seatNumber = this.selectedSeat.number;
-    }
+    this.passengers[this.currentPassengerIndex].seatId = this.selectedSeat.seatId;
 
-    this.closeSeatModal();
-    this.calculateTotalPrice();
+    this.passengers[this.currentPassengerIndex].seatNumber = this.selectedSeat.number;
+
+    this.calculateTotal();
+
+    this.closeModal();
   }
 
   closeSeatModal() {
-    this.showSeatModal = false;
-    this.selectedVagon = null;
-    this.selectedSeat = null;
-    this.currentPassengerIndex = -1;
+    this.closeModal();
   }
 
-  calculateTotalPrice() {
-    this.totalPrice = 0;
-    if (!this.selectedTrain?.vagons) return;
+  closeModal() {
+    this.showSeatModal = false;
 
-    this.passengers.forEach((passenger) => {
-      if (passenger.seatId) {
-        // Find seat in vagons
-        for (const vagon of this.selectedTrain!.vagons!) {
-          const seat = vagon.seats?.find((s) => s.seatId === passenger.seatId);
-          if (seat) {
-            this.totalPrice += seat.price;
-            break;
-          }
+    this.selectedSeat = null;
+  }
+
+  calculateTotal() {
+    this.totalPrice = 0;
+
+    this.passengers.forEach((p) => {
+      this.selectedTrain?.vagons.forEach((v) => {
+        const seat = v.seats.find((s) => s.seatId === p.seatId);
+
+        if (seat) {
+          this.totalPrice += seat.price;
         }
-      }
+      });
     });
   }
 
-  isFormValid(): boolean {
-    if (!this.email || !this.phoneNumber) {
-      return false;
+  calculateTotalPrice() {
+    this.calculateTotal();
+  }
+
+  calculateSeatPrice(seatId: string): number {
+    for (const vagon of this.selectedTrain?.vagons || []) {
+      const seat = vagon.seats.find((s) => s.seatId === seatId);
+
+      if (seat) {
+        return seat.price;
+      }
     }
 
-    return this.passengers.every((p) => p.name && p.surname && p.idNumber && p.seatId);
+    return 0;
+  }
+
+  isFormValid() {
+    return !!(
+      this.email &&
+      this.phoneNumber &&
+      this.passengers.every((p) => p.name && p.surname && p.idNumber && p.seatId)
+    );
   }
 
   proceedToPayment() {
     if (!this.isFormValid()) {
-      this.errorMessage = 'გთხოვთ შეავსოთ ყველა აუცილებელი ველი';
+      this.errorMessage = 'შეავსეთ ყველა ველი';
+
       return;
     }
 
-    // Navigate to payment page
     this.router.navigate(['/payment'], {
       state: {
         searchParams: this.searchParams,
         selectedTrain: this.selectedTrain,
         selectedDeparture: this.selectedDeparture,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
         passengers: this.passengers,
         totalPrice: this.totalPrice,
+        email: this.email,
+        phoneNumber: this.phoneNumber,
       },
     });
-  }
-
-  calculateSeatPrice(seatId: string): number {
-    if (!this.selectedTrain?.vagons) return 0;
-
-    for (const vagon of this.selectedTrain.vagons) {
-      const seat = vagon.seats?.find((s) => s.seatId === seatId);
-      if (seat) {
-        return seat.price;
-      }
-    }
-    return 0;
   }
 
   goBack() {

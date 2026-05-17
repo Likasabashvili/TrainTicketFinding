@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-// Custom logging interceptor
+// Custom interceptors
 import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
@@ -16,6 +16,8 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthInterceptor } from './auth.interceptor';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class LoggingInterceptor implements HttpInterceptor {
@@ -24,7 +26,13 @@ export class LoggingInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('HTTP Error:', error.status, error.message);
+        console.error('HTTP Error Details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url,
+          error: error.error,
+        });
         return throwError(() => error);
       }),
     );
@@ -36,6 +44,12 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
+    AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoggingInterceptor,

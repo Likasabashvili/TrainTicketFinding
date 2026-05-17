@@ -37,6 +37,38 @@ describe('Service', () => {
     req.flush([{ id: 1, name: 'თბილისი', stationNumber: 1 }]);
   });
 
+  it('should register and login users', () => {
+    const registerConfig = {
+      firstName: 'ანა',
+      lastName: 'აბაშიძე',
+      email: 'test@example.com',
+      phoneNumber: '+995555000000',
+      password: 'password123',
+      role: 'User',
+    };
+
+    service.register(registerConfig).subscribe((response) => {
+      expect(response.token).toBe('token-1');
+    });
+    let req = http.expectOne(`${apiUrl}/users/register`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(registerConfig);
+    req.flush({ token: 'token-1' });
+
+    const loginConfig = {
+      phoneNumber: '+995555000000',
+      password: 'password123',
+    };
+
+    service.login(loginConfig).subscribe((response) => {
+      expect(response.token).toBe('token-2');
+    });
+    req = http.expectOne(`${apiUrl}/users/login`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(loginConfig);
+    req.flush({ token: 'token-2' });
+  });
+
   it('should search departures with query params', () => {
     service.searchDepartures('თბილისი', 'ბათუმი', '2026-05-13').subscribe((departures) => {
       expect(departures).toEqual([]);

@@ -9,6 +9,9 @@ import {
   Ticket,
   RegisterTicketConfig,
   Seat,
+  RegisterUserConfig,
+  LoginConfig,
+  AuthResponse,
 } from './models/interfaces';
 
 @Injectable({
@@ -18,6 +21,15 @@ export class Service {
   private apiUrl = 'https://railway.stepprojects.ge/api';
 
   constructor(private http: HttpClient) {}
+
+  // Auth
+  register(config: RegisterUserConfig): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/users/register`, config);
+  }
+
+  login(config: LoginConfig): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/users/login`, config);
+  }
 
   // Stations
   getStations(): Observable<Station[]> {
@@ -58,8 +70,10 @@ export class Service {
     return this.http.get<Ticket[]>(`${this.apiUrl}/tickets`);
   }
 
-  registerTicket(config: RegisterTicketConfig): Observable<Ticket> {
-    return this.http.post<Ticket>(`${this.apiUrl}/tickets/register`, config);
+  registerTicket(config: RegisterTicketConfig): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/tickets/register`, config, {
+      responseType: 'json' as any,
+    });
   }
 
   checkTicketStatus(ticketId: string): Observable<Ticket> {

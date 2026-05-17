@@ -10,5 +10,16 @@
         ბილეთის შემოწმება/გაუქმება
       </button>
     </nav>
+
+    <div class="auth-section">
+      <div *ngIf="isAuthenticated$" class="user-info">
+        <span class="user-name">👤 {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+        <button (click)="logout()" class="logout-btn">გასვლა</button>
+      </div>
+      <div *ngIf="!isAuthenticated$" class="auth-buttons">
+        <button (click)="goToLogin()" class="login-btn">შესვლა</button>
+        <button (click)="goToRegister()" class="register-btn">რეგისტრაცია</button>
+      </div>
+    </div>
   </div>
 </header>

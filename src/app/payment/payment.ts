@@ -1,87 +1,106 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
+
 import { Router } from '@angular/router';
+
 import { Service } from '../service';
+
 import {
-  Train,
-  SearchParams,
-  PassengerData,
   Departure,
+  PassengerData,
   RegisterTicketConfig,
   PersonDto,
+  SearchParams,
   Ticket,
+  Train,
 } from '../models/interfaces';
 
 @Component({
   selector: 'app-payment',
+
+  standalone: true,
+
   imports: [CommonModule, FormsModule],
+
   templateUrl: './payment.html',
-  styleUrl: './payment.css',
+
+  styleUrls: ['./payment.css'],
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent {
+  @ViewChild('ticketPdf')
+  ticketPdf!: ElementRef;
+
   searchParams: SearchParams | null = null;
+
   selectedTrain: Train | null = null;
+
   selectedDeparture: Departure | null = null;
-  email = '';
-  phoneNumber = '';
+
   passengers: PassengerData[] = [];
+
   totalPrice = 0;
 
-  // Payment form
+  email = '';
+  phoneNumber = '';
+
   cardName = '';
   cardNumber = '';
   expiryDate = '';
   cvv = '';
 
-  isProcessing = false;
-  errorMessage = '';
-  ticket: Ticket | null = null;
   paymentSuccess = false;
+
+  isProcessing = false;
+
+  errorMessage = '';
+
+  ticket: Ticket | null = null;
 
   constructor(
     private service: Service,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras?.state) {
-      this.searchParams = navigation.extras.state['searchParams'];
-      this.selectedTrain = navigation.extras.state['selectedTrain'];
-      this.selectedDeparture = navigation.extras.state['selectedDeparture'];
-      this.email = navigation.extras.state['email'];
-      this.phoneNumber = navigation.extras.state['phoneNumber'];
-      this.passengers = navigation.extras.state['passengers'];
-      this.totalPrice = navigation.extras.state['totalPrice'];
-    }
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+
+    this.searchParams = state.searchParams;
+
+    this.selectedTrain = state.selectedTrain;
+
+    this.selectedDeparture = state.selectedDeparture;
+
+    this.passengers = state.passengers || [];
+
+    this.totalPrice = state.totalPrice || 0;
+
+    this.email = state.email || '';
+
+    this.phoneNumber = state.phoneNumber || '';
   }
 
-  ngOnInit() {}
-
-  isPaymentFormValid(): boolean {
+  isPaymentFormValid() {
     return !!(
       this.cardName &&
-      this.cardNumber &&
-      this.expiryDate &&
-      this.cvv &&
-      this.cardNumber.length === 16
+      /^\d{16}$/.test(this.cardNumber) &&
+      /^\d{2}\/\d{2}$/.test(this.expiryDate) &&
+      /^\d{3}$/.test(this.cvv)
     );
   }
 
   processPayment() {
     if (!this.isPaymentFormValid()) {
       this.errorMessage = 'გთხოვთ შეავსოთ საკრედიტო ბარათის ყველა აუცილებელი ველი';
+
       return;
     }
 
-    if (!this.selectedTrain) {
-      this.errorMessage = 'მატარებელი არ არის არჩეული';
-      return;
-    }
+    if (!this.selectedTrain) return;
 
     this.isProcessing = true;
-    this.errorMessage = '';
 
-    // Create ticket registration config
     const people: PersonDto[] = this.passengers.map((p) => ({
       seatId: p.seatId,
       name: p.name,
@@ -91,50 +110,132 @@ export class PaymentComponent implements OnInit {
       payoutCompleted: true,
     }));
 
-    const ticketConfig: RegisterTicketConfig = {
+    const config: RegisterTicketConfig = {
       trainId: this.selectedTrain.id,
-      date: new Date(this.searchParams?.date || new Date()),
+
+      date: new Date(this.searchParams?.date || ''),
+
       email: this.email,
+
       phoneNumber: this.phoneNumber,
-      people: people,
+
+      people,
     };
 
-    this.service.registerTicket(ticketConfig).subscribe(
-      (response) => {
-        this.ticket = response;
+    this.service.registerTicket(config).subscribe({
+      next: (response) => {
+        console.log('=== SUCCESS RESPONSE ===');
+        console.log('Full response:', response);
+        console.log('Response type:', typeof response);
+        console.log('Response keys:', Object.keys(response || {}));
+
+        // Handle the response - it might be the ticket object directly or wrapped
+        if (response && typeof response === 'object') {
+          this.ticket = response as Ticket;
+          console.log('Ticket ID from response:', this.ticket?.id);
+          console.log('Ticket structure:', this.ticket);
+        } else {
+          console.log('Response is not an object:', response);
+          this.ticket = { id: 'Unknown' } as any;
+        }
+
         this.paymentSuccess = true;
         this.isProcessing = false;
+        this.cdr.markForCheck();
 
-        // Confirm ticket
-        if (this.ticket.id) {
-          this.service.confirmTicket(this.ticket.id).subscribe(
-            () => {
-              // Ticket confirmed successfully
+        if (this.ticket?.id) {
+          console.log('Confirming ticket with ID:', this.ticket.id);
+          this.service.confirmTicket(this.ticket.id).subscribe({
+            next: (confirmResponse) => {
+              console.log('Ticket confirmed:', confirmResponse);
             },
-            (error) => {
-              console.error('Error confirming ticket:', error);
+            error: (confirmError) => {
+              console.error('Error confirming ticket:', confirmError);
             },
-          );
+          });
         }
       },
-      (error) => {
-        this.errorMessage = 'გადახდის დროს შეცდომა. გთხოვთ კვლავ სცადოთ.';
+
+      error: (error) => {
         console.error('Payment error:', error);
+        console.log('Setting isProcessing to false');
         this.isProcessing = false;
+
+        // Handle parsing errors with 200 status (server returned 200 but response body was malformed/empty)
+        // This is actually a success - the ticket was registered, just the response wasn't JSON
+        if (error.status === 200 && error.statusText === 'OK') {
+          console.log('Received 200 status with parsing error - treating as success');
+          console.log('Error details:', error);
+          console.log('Error body:', error.error);
+
+          this.paymentSuccess = true;
+
+          // Try to extract ticket ID from error message if it contains it
+          if (error.error && typeof error.error === 'string') {
+            const ticketIdMatch = error.error.match(/ticket[:\s]+([a-f0-9\-]+)/i);
+            const id = ticketIdMatch ? ticketIdMatch[1] : 'Ticket registered successfully';
+            console.log('Extracted ticket ID:', id);
+            this.ticket = { id } as any;
+          } else {
+            this.ticket = { id: 'Ticket registered successfully' } as any;
+          }
+
+          this.cdr.markForCheck();
+          return;
+        }
+
+        // Check if error is about occupied seat
+        if (error.error && typeof error.error === 'string' && error.error.includes('occupied')) {
+          this.errorMessage =
+            'არჩეული ადგილი უკვე დაჯავშნულია. გთხოვთ უკან დაბრუნდეთ და სხვა ადგილი აირჩიოთ.';
+          console.log('Occupied seat error detected');
+        } else if (error.error && error.error.message) {
+          this.errorMessage = error.error.message;
+        } else if (error.message) {
+          this.errorMessage = error.message;
+        } else {
+          this.errorMessage = 'გადახდის დროს შეცდომა. გთხოვთ კვლავ სცადოთ.';
+        }
+
+        console.log('Error message set to:', this.errorMessage);
+        console.log(
+          'Current state - isProcessing:',
+          this.isProcessing,
+          'errorMessage:',
+          !!this.errorMessage,
+        );
+
+        // Force change detection to update the UI immediately
+        this.cdr.markForCheck();
+        console.log('Change detection triggered');
       },
-    );
+    });
   }
 
   downloadTicketPDF() {
     if (!this.ticket) return;
-    // In a real application, you would generate and download a PDF
-    // For now, we'll just log the ticket ID
-    console.log('Download PDF for ticket:', this.ticket.id);
-    alert('ბილეთი გაიჁოა! ტიკეტის ID: ' + this.ticket.id);
+
+    const ticketHtml = this.ticketPdf?.nativeElement?.innerHTML || `Ticket ID: ${this.ticket.id}`;
+    const blob = new Blob([ticketHtml], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = `ticket-${this.ticket.id}.html`;
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   printTicket() {
     window.print();
+  }
+
+  copyTicketId() {
+    if (this.ticket?.id) {
+      navigator.clipboard.writeText(this.ticket.id).then(() => {
+        console.log('Ticket ID copied to clipboard:', this.ticket?.id);
+      });
+    }
   }
 
   goHome() {

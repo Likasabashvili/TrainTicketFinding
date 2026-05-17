@@ -1,166 +1,99 @@
 <div class="payment-container">
-  <div class="header">
-    <button (click)="goBack()" class="back-btn" [disabled]="paymentSuccess">← უკან</button>
+  <button (click)="goBack()" class="back-btn">უკან</button>
+
+  <div *ngIf="!paymentSuccess">
     <h2>გადახდა</h2>
-  </div>
 
-  <div *ngIf="!paymentSuccess" class="payment-form-section">
-    <div class="content-wrapper">
-      <div class="form-section">
-        <div class="payment-form">
-          <h3>საკრედიტო ბარათის დეტალები</h3>
+    <div *ngIf="errorMessage" class="error-section">
+      <div class="error">
+        {{ errorMessage }}
+      </div>
+      <button *ngIf="errorMessage.includes('occupied')" (click)="goBack()" class="retry-btn">
+        სხვა ადგილის არჩევა
+      </button>
+    </div>
 
-          <div class="form-group">
-            <label>ბარათის მფლობელის სახელი</label>
-            <input
-              [(ngModel)]="cardName"
-              type="text"
-              placeholder="სახელი გვარი"
-              [disabled]="isProcessing"
-            />
-          </div>
+    <div [style.opacity]="errorMessage ? 0.5 : 1">
+      <div class="form-group">
+        <label> ბარათის მფლობელი </label>
 
-          <div class="form-group">
-            <label>ბარათის ნომერი</label>
-            <input
-              [(ngModel)]="cardNumber"
-              type="text"
-              placeholder="0000 0000 0000 0000"
-              maxlength="16"
-              [disabled]="isProcessing"
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>ვადის გასვლის თარიღი</label>
-              <input
-                [(ngModel)]="expiryDate"
-                type="text"
-                placeholder="MM/YY"
-                maxlength="5"
-                [disabled]="isProcessing"
-              />
-            </div>
-            <div class="form-group">
-              <label>CVV</label>
-              <input
-                [(ngModel)]="cvv"
-                type="text"
-                placeholder="000"
-                maxlength="3"
-                [disabled]="isProcessing"
-              />
-            </div>
-          </div>
-
-          <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-
-          <button
-            (click)="processPayment()"
-            [disabled]="!isPaymentFormValid() || isProcessing"
-            class="pay-btn"
-          >
-            <span *ngIf="!isProcessing">გადახდა {{ totalPrice }} ₾</span>
-            <span *ngIf="isProcessing">დაბეჭდვა...</span>
-          </button>
-        </div>
+        <input type="text" [(ngModel)]="cardName" [disabled]="!!errorMessage" />
       </div>
 
-      <div class="invoice-section">
-        <div class="invoice">
-          <h3>შეკვეთის შეჯამება</h3>
+      <div class="form-group">
+        <label> ბარათის ნომერი </label>
 
-          <div class="invoice-header">
-            <p>
-              <strong>{{ selectedTrain?.from }} → {{ selectedTrain?.to }}</strong>
-            </p>
-            <p>რეისი: #{{ selectedTrain?.number }}</p>
-            <p>თარიღი: {{ selectedTrain?.date }}</p>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="invoice-details">
-            <h4>მგზავრები</h4>
-            <div *ngFor="let passenger of passengers; let i = index" class="passenger-item">
-              <span>{{ i + 1 }}. {{ passenger.surname }} {{ passenger.name }}</span>
-              <span class="seat-info">ადგილი {{ passenger.seatNumber }}</span>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="contact-details">
-            <h4>საკონტაქტო ინფორმაცია</h4>
-            <p>ელფოსტა: {{ email }}</p>
-            <p>ტელეფონი: {{ phoneNumber }}</p>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="invoice-total">
-            <strong>სულ:</strong>
-            <span class="total-price">{{ totalPrice }} ₾</span>
-          </div>
-        </div>
+        <input type="text" maxlength="16" [(ngModel)]="cardNumber" [disabled]="!!errorMessage" />
       </div>
+
+      <div class="form-group">
+        <label> Expiry </label>
+
+        <input
+          type="text"
+          placeholder="MM/YY"
+          [(ngModel)]="expiryDate"
+          [disabled]="!!errorMessage"
+        />
+      </div>
+
+      <div class="form-group">
+        <label> CVV </label>
+
+        <input type="text" maxlength="3" [(ngModel)]="cvv" [disabled]="!!errorMessage" />
+      </div>
+
+      <h3>
+        ჯამი:
+        {{ totalPrice }} ₾
+      </h3>
+
+      <button (click)="processPayment()" [disabled]="isProcessing || !!errorMessage">
+        {{ isProcessing ? 'იტვირთება...' : 'გადახდა' }}
+      </button>
     </div>
   </div>
 
-  <!-- Payment Success Screen -->
-  <div *ngIf="paymentSuccess && ticket" class="success-section">
-    <div class="success-card">
-      <div class="success-icon">✓</div>
-      <h2>გადახდა წარმატებული!</h2>
+  <div *ngIf="paymentSuccess && ticket" #ticketPdf>
+    <h2>გადახდა წარმატებულია ✓</h2>
 
-      <div class="ticket-info">
-        <h3>თქვენი ბილეთი</h3>
+    <div class="success-box">
+      <p class="ticket-id-label">ბილეთის ID:</p>
+      <p class="ticket-id" (click)="copyTicketId()">
+        {{ ticket.id }}
+      </p>
+      <p class="copy-hint">დააჭირეთ კოპირებისთვის</p>
+    </div>
 
-        <div class="ticket-details">
-          <div class="detail-row">
-            <span>ბილეთის ID:</span>
-            <span class="ticket-id">{{ ticket.id }}</span>
-          </div>
+    <div *ngIf="ticket.train" class="ticket-info">
+      <p>
+        <strong>{{ ticket.train.from }}</strong> → <strong>{{ ticket.train.to }}</strong>
+      </p>
+      <p>რეისი: {{ ticket.train.number }}</p>
+    </div>
 
-          <div class="detail-row">
-            <span>რეისი:</span>
-            <span>#{{ ticket.trainID }}</span>
-          </div>
+    <div *ngIf="ticket.ticketPrice">
+      <p>
+        <strong>თანხა:</strong>
+        {{ ticket.ticketPrice }}
+        ₾
+      </p>
+    </div>
 
-          <div class="detail-row">
-            <span>მარშრუტი:</span>
-            <span>{{ ticket.train.from }} → {{ ticket.train.to }}</span>
-          </div>
-
-          <div class="detail-row">
-            <span>თარიღი:</span>
-            <span>{{ ticket.date }}</span>
-          </div>
-
-          <div class="detail-row">
-            <span>ჯამი:</span>
-            <span class="amount">{{ ticket.ticketPrice }} ₾</span>
-          </div>
-        </div>
-
-        <div class="passengers-list">
-          <h4>მგზავრები:</h4>
-          <div *ngFor="let person of ticket.persons" class="person-item">
-            <span>{{ person.surname }} {{ person.name }}</span>
-            <span class="seat">{{ person.seat.number }}</span>
-          </div>
-        </div>
+    <div *ngIf="ticket.persons && ticket.persons.length > 0" class="persons-list">
+      <h3>მგზავრები:</h3>
+      <div *ngFor="let person of ticket.persons" class="person-item">
+        <p>
+          <strong>{{ person.name }} {{ person.surname }}</strong>
+        </p>
+        <p *ngIf="person.seat">ადგილი: {{ person.seat.number }}</p>
       </div>
+    </div>
 
-      <div class="action-buttons">
-        <button (click)="downloadTicketPDF()" class="download-btn">⬇ PDF ჩამოტვირთვა</button>
-        <button (click)="printTicket()" class="print-btn">🖨 ბეჭდვა</button>
-      </div>
-
-      <div class="navigation-buttons">
-        <button (click)="goHome()" class="home-btn">მთავარ გვერდზე</button>
-      </div>
+    <div class="action-buttons">
+      <button (click)="downloadTicketPDF()" *ngIf="ticket.train">PDF</button>
+      <button (click)="printTicket()" *ngIf="ticket.train">ბეჭდვა</button>
+      <button (click)="goHome()" class="home-btn">მთავარი</button>
     </div>
   </div>
 </div>

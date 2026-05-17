@@ -124,7 +124,7 @@ describe('TrainRoutesComponent', () => {
     });
     fixture.detectChanges();
 
-    component.bookTicket(departures[0].trains[0]);
+    component.bookTicket(departures[0].trains[0], departures[0]);
 
     expect(router.navigate).toHaveBeenCalledWith(['/passenger-info'], {
       state: {

@@ -7,14 +7,14 @@ import { Station, SearchParams } from '../models/interfaces';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrls: ['./home.css'],
 })
 export class Home implements OnInit {
   stations: Station[] = [];
 
-  // Search form fields
   fromStation = '';
   toStation = '';
   travelDate = '';
@@ -28,21 +28,20 @@ export class Home implements OnInit {
     private router: Router,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.fetchStations();
   }
 
   fetchStations() {
-    this.service.getStations().subscribe(
-      (data) => {
-        console.log('Stations loaded:', data);
+    this.service.getStations().subscribe({
+      next: (data) => {
         this.stations = data;
       },
-      (error) => {
+
+      error: () => {
         this.errorMessage = 'ტერმინალების ჩატვირთვაში შეცდომა';
-        console.error('Error fetching stations:', error);
       },
-    );
+    });
   }
 
   isSearchFormValid(): boolean {
@@ -56,17 +55,9 @@ export class Home implements OnInit {
 
   searchTrains() {
     if (!this.isSearchFormValid()) {
-      this.errorMessage = 'გთხოვთ შეავსოთ ყველა ველი და აირჩიოთ სხვადსხვა ტერმინალი';
+      this.errorMessage = 'გთხოვთ შეავსოთ ყველა ველი';
       return;
     }
-
-    if (this.fromStation === this.toStation) {
-      this.errorMessage = 'საწყისი და საბოლოო სადგური ვერ შეიძლება იყოს ერთი და იგივე';
-      return;
-    }
-
-    this.errorMessage = '';
-    this.isLoading = true;
 
     const searchParams: SearchParams = {
       from: this.fromStation,
@@ -75,8 +66,10 @@ export class Home implements OnInit {
       passengers: this.numberOfPassengers,
     };
 
-    // Keep params in both state and URL so the results page still works after refresh.
-    this.router.navigate(['/trains'], { state: searchParams, queryParams: searchParams });
+    this.router.navigate(['/trains'], {
+      state: searchParams,
+      queryParams: searchParams,
+    });
   }
 
   openTicketCheck() {
@@ -84,7 +77,6 @@ export class Home implements OnInit {
   }
 
   getToday(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
+    return new Date().toISOString().split('T')[0];
   }
 }

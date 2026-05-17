@@ -1,84 +1,84 @@
 <div class="home-container">
-  <div class="photo">
-    <div class="header-section">
-      <h1>მატარებლის ბილეთების ონლაინ შეძენა</h1>
-      <p>დაჯავშნე ბილეთები საუკეთესო ფასში!</p>
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">საქართველოს რკინიგზა</p>
+      <h1>მატარებლის ბილეთები მარტივად</h1>
+      <p class="hero-copy">აირჩიე მიმართულება, თარიღი და ნახე ხელმისაწვდომი რეისები რამდენიმე წამში.</p>
     </div>
-  </div>
 
-  <div class="search-section">
-    <div class="search-card">
-      <h2>ძებნა</h2>
-
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
+    <form class="search-panel" (submit)="$event.preventDefault(); searchTrains()">
+      <div class="panel-header">
+        <div>
+          <span class="panel-label">რეისის ძებნა</span>
+          <h2>სად მიდიხარ?</h2>
+        </div>
+        <button type="button" (click)="openTicketCheck()" class="ticket-check-btn">
+          ბილეთის შემოწმება
+        </button>
       </div>
 
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
       <div class="form-grid">
-        <div class="form-group">
-          <label>საწყის ტერმინალი</label>
-          <select [(ngModel)]="fromStation">
-            <option value="">საიდან</option>
+        <label class="form-group">
+          <span>საიდან</span>
+          <select [(ngModel)]="fromStation" name="fromStation">
+            <option value="">აირჩიე სადგური</option>
             <option *ngFor="let station of stations" [value]="station.name">
               {{ station.name }}
             </option>
           </select>
-        </div>
+        </label>
 
-        <div class="form-group">
-          <label>საბოლოო ტერმინალი</label>
-          <select [(ngModel)]="toStation">
-            <option value="">სადამდე</option>
+        <label class="form-group">
+          <span>სადამდე</span>
+          <select [(ngModel)]="toStation" name="toStation">
+            <option value="">აირჩიე სადგური</option>
             <option *ngFor="let station of stations" [value]="station.name">
               {{ station.name }}
             </option>
           </select>
-        </div>
+        </label>
 
-        <div class="form-group">
-          <label>თარიღი</label>
-          <input [(ngModel)]="travelDate" type="date" [min]="getToday()" />
-        </div>
+        <label class="form-group">
+          <span>თარიღი</span>
+          <input [(ngModel)]="travelDate" name="travelDate" type="date" [min]="getToday()" />
+        </label>
 
-        <div class="form-group">
-          <label>მგზავრების რაოდენობა</label>
-          <select [(ngModel)]="numberOfPassengers">
+        <label class="form-group">
+          <span>მგზავრები</span>
+          <select [(ngModel)]="numberOfPassengers" name="numberOfPassengers">
             <option [value]="1">1 მგზავრი</option>
             <option [value]="2">2 მგზავრი</option>
             <option [value]="3">3 მგზავრი</option>
             <option [value]="4">4 მგზავრი</option>
             <option [value]="5">5 მგზავრი</option>
           </select>
-        </div>
+        </label>
       </div>
 
-      <button
-        (click)="searchTrains()"
-        [disabled]="!isSearchFormValid() || isLoading"
-        class="search-btn"
-      >
+      <button type="submit" [disabled]="!isSearchFormValid() || isLoading" class="search-btn">
         <span *ngIf="!isLoading">მატარებლის მოძებნა</span>
-        <span *ngIf="isLoading">დაბეჭდვა...</span>
+        <span *ngIf="isLoading">იტვირთება...</span>
       </button>
+    </form>
+  </section>
 
-      <button (click)="openTicketCheck()" class="ticket-check-btn">
-        ✓ ბილეთის შემოწმება/გაუქმება
-      </button>
-    </div>
-  </div>
-
-  <div class="info-section">
-    <div class="info-card">
-      <h3>🎫 სწრაფი დაჯავშნა</h3>
-      <p>აირჩიეთ თქვენი სახელმწიფო და დროი მათ ჩატვირთვაში</p>
-    </div>
-    <div class="info-card">
-      <h3>💳 უსაფრთხო გადახდა</h3>
-      <p>ყველა თქვენი ბიძგი და ფულადი ინფორმაცია დაცულია</p>
-    </div>
-    <div class="info-card">
-      <h3>🎯 მყისიერი დადასტურება</h3>
-      <p>მიიღეთ ელფოსტის გამოწერილი ბილეთი უბრალოდ რეგისტრაციის შემდეგ</p>
-    </div>
-  </div>
+  <section class="info-section" aria-label="სერვისის უპირატესობები">
+    <article class="info-card">
+      <span class="info-number">01</span>
+      <h3>სწრაფი ძებნა</h3>
+      <p>რეისები გამოჩნდება არჩეული სადგურებისა და თარიღის მიხედვით.</p>
+    </article>
+    <article class="info-card">
+      <span class="info-number">02</span>
+      <h3>ადგილის არჩევა</h3>
+      <p>მგზავრის მონაცემებთან ერთად შეგიძლია აირჩიო სასურველი ადგილი.</p>
+    </article>
+    <article class="info-card">
+      <span class="info-number">03</span>
+      <h3>ბილეთის კონტროლი</h3>
+      <p>შეძენილი ბილეთის შემოწმება და გაუქმება ხელმისაწვდომია ცალკე გვერდიდან.</p>
+    </article>
+  </section>
 </div>
