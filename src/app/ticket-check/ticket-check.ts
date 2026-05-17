@@ -24,10 +24,34 @@ export class TicketCheckComponent {
     private router: Router,
   ) {}
 
+  // checkTicket() {
+  //   if (!this.ticketId.trim()) {
+  //     this.errorMessage = 'გთხოვთ შეიყვანოთ ბილეთის ID';
+
+  //     return;
+  //   }
+
+  //   this.isLoading = true;
+
+  //   this.errorMessage = '';
+
+  //   this.service.checkTicketStatus(this.ticketId).subscribe({
+  //     next: (response) => {
+  //       this.ticket = response;
+
+  //       this.isLoading = false;
+  //     },
+
+  //     error: () => {
+  //       this.errorMessage = 'ბილეთი არ მოიძებნა. გთხოვთ შეამოწმეთ ბილეთის ID.';
+
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
   checkTicket() {
     if (!this.ticketId.trim()) {
       this.errorMessage = 'გთხოვთ შეიყვანოთ ბილეთის ID';
-
       return;
     }
 
@@ -35,15 +59,34 @@ export class TicketCheckComponent {
 
     this.errorMessage = '';
 
+    this.successMessage = '';
+
     this.service.checkTicketStatus(this.ticketId).subscribe({
-      next: (response) => {
-        this.ticket = response;
+      next: (response: any) => {
+        console.log(response);
+
+        // თუ backend string აბრუნებს
+        if (typeof response === 'string') {
+          try {
+            this.ticket = JSON.parse(response);
+          } catch {
+            this.errorMessage = response;
+          }
+        } else {
+          this.ticket = response;
+        }
 
         this.isLoading = false;
       },
 
-      error: () => {
-        this.errorMessage = 'ბილეთი არ მოიძებნა. გთხოვთ შეამოწმეთ ბილეთის ID.';
+      error: (err) => {
+        console.log(err);
+
+        if (typeof err.error === 'string') {
+          this.errorMessage = err.error;
+        } else {
+          this.errorMessage = 'ბილეთი არ მოიძებნა';
+        }
 
         this.isLoading = false;
       },

@@ -70,30 +70,47 @@ export class Service {
     return this.http.get<Ticket[]>(`${this.apiUrl}/tickets`);
   }
 
-  registerTicket(config: RegisterTicketConfig): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/tickets/register`, config, {
-      responseType: 'json' as any,
+  registerTicket(config: RegisterTicketConfig): Observable<string> {
+    return this.http.post(`${this.apiUrl}/tickets/register`, config, {
+      responseType: 'text',
     });
   }
 
-  checkTicketStatus(ticketId: string): Observable<Ticket> {
-    return this.http.get<Ticket>(`${this.apiUrl}/tickets/checkstatus/${ticketId}`);
+  // checkTicketStatus(ticketId: string): Observable<Ticket> {
+  //   return this.http.get<Ticket>(`${this.apiUrl}/tickets/checkstatus/${ticketId}`);
+  // }
+
+  // confirmTicket(ticketId: string): Observable<Ticket> {
+  //   return this.http.get<Ticket>(`${this.apiUrl}/tickets/confirm/${ticketId}`);
+  // }
+
+  // cancelTicket(ticketId: string): Observable<Ticket> {
+  //   return this.http.delete<Ticket>(`${this.apiUrl}/tickets/cancel/${ticketId}`);
+  // }
+
+  // cancelAllTickets(): Observable<Seat> {
+  //   return this.http.delete<Seat>(`${this.apiUrl}/tickets/cancelAll`);
+  // }
+
+  // // Seats
+  // getSeat(seatId: string): Observable<Seat> {
+  //   return this.http.get<Seat>(`${this.apiUrl}/seat/${seatId}`);
+  // }
+  checkTicketStatus(ticketId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/tickets/checkstatus/${ticketId}`, {
+      responseType: 'text',
+    });
   }
 
-  confirmTicket(ticketId: string): Observable<Ticket> {
-    return this.http.get<Ticket>(`${this.apiUrl}/tickets/confirm/${ticketId}`);
+  confirmTicket(ticketId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/tickets/confirm/${ticketId}`, {
+      responseType: 'text',
+    });
   }
 
-  cancelTicket(ticketId: string): Observable<Ticket> {
-    return this.http.delete<Ticket>(`${this.apiUrl}/tickets/cancel/${ticketId}`);
-  }
-
-  cancelAllTickets(): Observable<Seat> {
-    return this.http.delete<Seat>(`${this.apiUrl}/tickets/cancelAll`);
-  }
-
-  // Seats
-  getSeat(seatId: string): Observable<Seat> {
-    return this.http.get<Seat>(`${this.apiUrl}/seat/${seatId}`);
+  cancelTicket(ticketId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/tickets/cancel/${ticketId}`, {
+      responseType: 'text',
+    });
   }
 }
