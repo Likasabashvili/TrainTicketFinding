@@ -548,6 +548,128 @@ button:active:not(:disabled) {
   border-bottom: none;
 }
 
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    gap: 20px;
+  }
+
+  .invoice-section {
+    width: 100%;
+    position: static;
+  }
+
+  .form-section {
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 24px 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .header h2 {
+    font-size: 32px;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .form-section {
+    width: 100%;
+  }
+
+  .invoice {
+    padding: 22px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+
+  .success-card {
+    padding: 30px 24px;
+  }
+
+  .success-card h2 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-container {
+    padding: 16px 12px;
+  }
+
+  .header h2 {
+    font-size: 26px;
+  }
+
+  .back-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .form-section {
+    min-width: unset;
+  }
+
+  .invoice {
+    padding: 16px;
+  }
+
+  .ticket-id {
+    font-size: 20px;
+  }
+
+  .persons-list h3 {
+    font-size: 16px;
+  }
+
+  .success-card {
+    padding: 20px 16px;
+  }
+
+  .success-icon {
+    width: 90px;
+    height: 90px;
+    font-size: 48px;
+    margin: 0 auto 18px;
+  }
+
+  .success-card h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .invoice-total {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 18px;
+  }
+
+  .total-price {
+    font-size: 26px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
 .detail-row span:first-child {
   color: #486579;
   font-weight: 600;

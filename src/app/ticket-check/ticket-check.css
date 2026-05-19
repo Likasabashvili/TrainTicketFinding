@@ -1,12 +1,12 @@
 .ticket-check {
-  max-width: 900px;
   margin: 0 auto;
   padding: 40px 24px;
   min-height: 100vh;
   background:
     radial-gradient(circle at top left, rgba(125, 211, 252, 0.35), transparent 30%),
     radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.18), transparent 25%),
-    linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 45%, #f8fdff 100%);
+    linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 45%, #f8fdff 100%) !important;
+  background-attachment: fixed;
   font-family: Inter, 'Segoe UI', sans-serif;
   color: #123047;
 }
@@ -697,5 +697,45 @@
   .ticket-header,
   .ticket-actions {
     padding: 22px;
+  }
+}
+
+@media (max-width: 380px) {
+  .ticket-check {
+    padding: 12px;
+  }
+
+  .ticket-check > h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .search {
+    padding: 12px;
+  }
+
+  .search input,
+  .search button {
+    min-height: 40px;
+    font-size: 13px;
+  }
+
+  .ticket-header h3 {
+    font-size: 18px;
+  }
+
+  .status {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .detail-section h4 {
+    font-size: 14px;
+  }
+
+  .error,
+  .success {
+    padding: 10px 12px;
+    font-size: 12px;
   }
 }

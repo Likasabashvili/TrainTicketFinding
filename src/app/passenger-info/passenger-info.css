@@ -525,6 +525,56 @@
   }
 }
 
+@media (max-width: 770px) {
+  .passenger-info-container {
+    padding: 28px 18px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .header h2 {
+    font-size: 28px;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .form-section {
+    width: 100%;
+  }
+
+  .invoice-section {
+    width: 100%;
+    position: static;
+  }
+
+  .contact-info,
+  .passenger-count,
+  .passengers,
+  .invoice {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  input,
+  select {
+    min-height: 44px;
+  }
+
+  .seats-container {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .passenger-info-container {
     padding: 22px 14px;
@@ -573,5 +623,70 @@
   .seat-btn {
     font-size: 12px;
     padding: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .passenger-info-container {
+    padding: 16px 12px;
+  }
+
+  .header h2 {
+    font-size: 20px;
+  }
+
+  .back-btn {
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .contact-info,
+  .passenger-count,
+  .passengers,
+  .invoice {
+    padding: 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .contact-info h3,
+  .passenger-count h3,
+  .passengers h3,
+  .invoice h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  input,
+  select {
+    min-height: 40px;
+    font-size: 13px;
+  }
+
+  .next-btn,
+  .prev-btn {
+    min-height: 44px;
+    font-size: 13px;
+    padding: 12px 18px;
+  }
+
+  .seat-btn {
+    font-size: 11px;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .modal-content {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .invoice-total {
+    font-size: 16px;
+  }
+
+  .total-price {
+    font-size: 20px;
   }
 }
