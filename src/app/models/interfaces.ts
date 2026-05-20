@@ -109,26 +109,47 @@ export interface BookingSession {
   passengers: PassengerData[];
   totalPrice: number;
 }
-
-export interface RegisterUserConfig {
-  firstName: string;
-  lastName: string;
-  email: string;
+export interface RegisterRequest {
   phoneNumber: string;
   password: string;
+  email: string;
+  firstName: string;
+  lastName: string;
   role: string;
 }
 
-export interface LoginConfig {
+export interface LoginRequest {
   phoneNumber: string;
   password: string;
 }
 
 export interface AuthResponse {
   token: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phoneNumber?: string;
-  role?: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  phoneNumber: string;
+  email: string;
 }
+// export interface RegisterUserConfig {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   phoneNumber: string;
+//   password: string;
+//   role: string;
+// }
+
+// export interface LoginConfig {
+//   phoneNumber: string;
+//   password: string;
+// }
+
+// export interface AuthResponse {
+//   token: string;
+//   firstName?: string;
+//   lastName?: string;
+//   email?: string;
+//   phoneNumber?: string;
+//   role?: string;
+// }
