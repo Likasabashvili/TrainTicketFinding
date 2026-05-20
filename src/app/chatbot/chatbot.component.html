@@ -1,0 +1,55 @@
+<div class="chat-container">
+  <!-- ჰედერი -->
+  <div class="chat-header">
+    <span class="logo">🚂</span>
+    <div>
+      <h1>მატარებლის ბილეთი - AI დამხმარე</h1>
+      <p>Gemini AI დახმარება მატარებლის ბილეთების შესახებ</p>
+    </div>
+  </div>
+
+  <!-- API Key -->
+  <div class="api-key-section">
+    <label>🔑 Gemini API Key:</label>
+    <input type="password" [(ngModel)]="apiKey" placeholder="ჩასვით თქვენი Gemini API key..." />
+    <small>API key გამოიყენება მხოლოდ ამ სეშნში (ზღვრად არ დაინახება)</small>
+  </div>
+
+  <!-- მესიჯები -->
+  <div class="chat-messages" #chatMessages>
+    <div class="welcome" *ngIf="showWelcome">
+      <div class="emoji">🚂</div>
+      <p><strong>კეთილი იყოს თქვენი მობრძანება!</strong></p>
+      <p>მე ვაკეთებ დახმარება მატარებლის ბილეთების შესახებ</p>
+      <p style="margin-top: 16px; font-size: 13px">შეკითხვის მაგალითები:</p>
+      <ul class="example-questions">
+        <li *ngFor="let question of exampleQuestions">{{ question }}</li>
+      </ul>
+      <p style="margin-top: 12px; font-size: 12px; color: #999">პირველი ჩასვით API Key ზემოთ</p>
+    </div>
+
+    <div *ngFor="let message of messages" [ngClass]="'message ' + message.type">
+      {{ message.text }}
+    </div>
+
+    <div class="typing-indicator" *ngIf="isLoading">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- ინფუთი -->
+  <div class="chat-input">
+    <input
+      type="text"
+      [(ngModel)]="userInput"
+      (keyup.enter)="sendMessage()"
+      placeholder="დაწერეთ შეკითხვა..."
+      [disabled]="isLoading"
+    />
+    <button (click)="sendMessage()" [disabled]="isLoading">
+      {{ isLoading ? '...გაიგზავნა' : 'გაგზავნა' }}
+    </button>
+  </div>
+</div>

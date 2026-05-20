@@ -7,6 +7,7 @@ import { TicketCheckComponent } from './ticket-check/ticket-check';
 import { TestHomeComponent } from './test-home';
 import { LoginComponent } from './auth/login';
 import { RegisterComponent } from './auth/register';
+import { HelpComponent } from './chatbot/help.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,10 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+  },
+  {
+    path: 'help',
+    component: HelpComponent,
   },
   {
     path: '**',

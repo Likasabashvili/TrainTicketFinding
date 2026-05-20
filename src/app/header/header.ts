@@ -38,12 +38,20 @@ export class HeaderComponent implements OnInit {
     return this.router.url === '/ticket-check';
   }
 
+  isHelpPage(): boolean {
+    return this.router.url === '/help';
+  }
+
   goHome() {
     this.router.navigate(['/']);
   }
 
   goToTicketCheck() {
     this.router.navigate(['/ticket-check']);
+  }
+
+  goToHelp() {
+    this.router.navigate(['/help']);
   }
 
   goToLogin() {
