@@ -100,6 +100,7 @@ import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { Service } from '../service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -122,12 +123,18 @@ export class RegisterComponent {
 
   constructor(
     private service: Service,
+    private authService: AuthService,
     private router: Router,
   ) {}
 
   register() {
     if (!this.firstName || !this.lastName || !this.email || !this.phoneNumber || !this.password) {
       this.errorMessage = 'გთხოვთ შეავსოთ ყველა ველი';
+      return;
+    }
+
+    if (!this.email.includes('@')) {
+      this.errorMessage = 'ელფოსტა უნდა შეიცავდეს @ სიმბოლოს';
       return;
     }
 
@@ -158,6 +165,7 @@ export class RegisterComponent {
 
         error: (err: HttpErrorResponse) => {
           this.isLoading = false;
+          this.authService.logout();
 
           console.error(err);
 

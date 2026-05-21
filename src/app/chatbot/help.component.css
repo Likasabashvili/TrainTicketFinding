@@ -14,3 +14,17 @@
   align-items: flex-start;
   min-height: calc(100vh - 80px);
 }
+
+@media (max-width: 768px) {
+  .help-content {
+    padding: 24px 16px;
+    min-height: calc(100vh - 140px);
+  }
+}
+
+@media (max-width: 480px) {
+  .help-content {
+    padding: 12px;
+    align-items: stretch;
+  }
+}

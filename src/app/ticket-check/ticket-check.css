@@ -318,6 +318,63 @@
     inset 0 1px 1px rgba(255, 255, 255, 0.7);
 }
 
+@media (max-width: 768px) {
+  .ticket-check {
+    padding: 26px 16px;
+  }
+
+  .ticket-check > h2 {
+    font-size: 32px;
+  }
+
+  .search,
+  .search-input-group {
+    flex-direction: column;
+    padding: 22px;
+  }
+
+  .search button,
+  .search-btn,
+  .ticket-check > button:first-child {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .ticket-check > div:not(.error):not(.success):not(.search) {
+    padding: 22px;
+    border-radius: 20px;
+  }
+
+  .ticket-check > div:not(.error):not(.success):not(.search) h3 {
+    font-size: 26px;
+    overflow-wrap: anywhere;
+  }
+
+  .ticket-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ticket-check {
+    padding: 18px 12px;
+  }
+
+  .ticket-check > h2 {
+    font-size: 26px;
+  }
+
+  .search {
+    padding: 16px;
+  }
+
+  .ticket-id,
+  .ticket-check p {
+    overflow-wrap: anywhere;
+  }
+}
+
 /* TICKET HEADER */
 .ticket-header {
   padding: 32px;

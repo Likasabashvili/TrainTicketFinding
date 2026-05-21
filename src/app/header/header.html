@@ -1,8 +1,21 @@
 <header class="app-header">
-  <div class="header-content">
+  <div class="header-content" [class.menu-open]="isMenuOpen">
     <div class="logo-section">
       <h1 class="logo">🚂 Train</h1>
     </div>
+
+    <button
+      type="button"
+      class="burger-btn"
+      [class.open]="isMenuOpen"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="მენიუს გახსნა"
+      (click)="toggleMenu()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
     <nav class="nav-menu">
       <button (click)="goHome()" [class.active]="isHomePage()" class="nav-btn">მთავარი</button>

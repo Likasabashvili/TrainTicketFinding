@@ -64,11 +64,20 @@ export class AuthService {
 
   currentUser$ = this.currentUserSubject.asObservable();
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(!!this.getToken());
 
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  setUser(user: AuthResponse) {
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  setUser(user: AuthResponse): void {
+    if (!user?.token) {
+      this.logout();
+      return;
+    }
+
     localStorage.setItem('token', user.token);
 
     localStorage.setItem('user', JSON.stringify(user));
@@ -78,10 +87,9 @@ export class AuthService {
     this.isAuthenticatedSubject.next(true);
   }
 
-  logout() {
-    localStorage.removeItem('token');
-
-    localStorage.removeItem('user');
+  logout(): void {
+    localStorage.clear();
+    sessionStorage.clear();
 
     this.currentUserSubject.next(null);
 
@@ -91,6 +99,17 @@ export class AuthService {
   private getStoredUser(): AuthResponse | null {
     const user = localStorage.getItem('user');
 
-    return user ? JSON.parse(user) : null;
+    if (!user) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(user);
+    } catch {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+
+      return null;
+    }
   }
 }

@@ -3,7 +3,7 @@
     <p class="auth-eyebrow">კეთილი დაბრუნება</p>
     <h2>შესვლა</h2>
 
-    <div *ngIf="errorMessage" class="error">
+    <div *ngIf="errorMessage" class="error" role="alert" aria-live="polite">
       {{ errorMessage }}
     </div>
 
@@ -17,7 +17,9 @@
       <input type="password" placeholder="შეიყვანე პაროლი" [(ngModel)]="password" />
     </label>
 
-    <button (click)="login()">შესვლა</button>
+    <button type="button" (click)="login()" [disabled]="isLoading">
+      {{ isLoading ? 'იტვირთება...' : 'შესვლა' }}
+    </button>
 
     <p class="auth-link">არ გაქვს ანგარიში? <a routerLink="/register">რეგისტრაცია</a></p>
   </div>

@@ -116,31 +116,31 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
         }),
       });
 
-      const data = await response.json();
+      const data = await this.readGeminiResponse(response);
 
       if (!response.ok) {
-        const errorMsg = data.error?.message || 'მოხდა შეცდომა API-სთან';
+        const errorMsg = data?.error?.message || 'მოხდა შეცდომა API-სთან';
         this.showError('❌ შეცდომა: ' + errorMsg);
       } else {
         const botReply =
-          data.candidates?.[0]?.content?.parts?.[0]?.text || 'მოხდა შეცდომა პასუხის მიღებისას';
+          data?.candidates?.[0]?.content?.parts?.[0]?.text || 'მოხდა შეცდომა პასუხის მიღებისას';
         this.addMessage(botReply, 'bot');
       }
     } catch (error) {
       this.showError(
         '❌ მოხდა შეცდომა: ' + (error instanceof Error ? error.message : 'Unknown error'),
       );
+    } finally {
+      this.isLoading = false;
+      this.cdr.markForCheck();
     }
-
-    this.isLoading = false;
-    this.cdr.markForCheck();
   }
 
   private addMessage(text: string, type: Message['type']): void {
     if (this.showWelcome) {
       this.showWelcome = false;
     }
-    this.messages.push({ text, type });
+    this.messages = [...this.messages, { text, type }];
     this.cdr.markForCheck();
   }
 
@@ -155,6 +155,24 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
       }
     } catch (err) {
       // Ignore scroll errors
+    }
+  }
+
+  private async readGeminiResponse(response: Response): Promise<any> {
+    const text = await response.text();
+
+    if (!text) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      return {
+        error: {
+          message: text,
+        },
+      };
     }
   }
 }

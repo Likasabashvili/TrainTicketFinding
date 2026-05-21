@@ -359,3 +359,42 @@
     font-size: 22px;
   }
 }
+
+@media (max-width: 520px) {
+  .train-routes-container {
+    padding: 18px 12px;
+  }
+
+  .back-btn {
+    width: 100%;
+  }
+
+  .search-info {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .search-info p,
+  .search-info strong {
+    overflow-wrap: anywhere;
+  }
+
+  .departure-group h3 {
+    overflow-wrap: anywhere;
+  }
+
+  .train-name,
+  .station,
+  .time {
+    overflow-wrap: anywhere;
+  }
+
+  .loading-container {
+    min-height: 300px;
+    padding: 70px 16px;
+  }
+
+  .loading-subtext {
+    font-size: 14px;
+  }
+}

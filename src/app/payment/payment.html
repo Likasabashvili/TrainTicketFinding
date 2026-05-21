@@ -1,9 +1,10 @@
 <div class="payment-container">
-  <button (click)="goBack()" class="back-btn">უკან</button>
+  <div class="header">
+    <button (click)="goBack()" class="back-btn">უკან</button>
+    <h2 *ngIf="!paymentSuccess">გადახდა</h2>
+  </div>
 
   <div *ngIf="!paymentSuccess">
-    <h2>გადახდა</h2>
-
     <div *ngIf="errorMessage" class="error-section">
       <div class="error">
         {{ errorMessage }}
@@ -13,44 +14,62 @@
       </button>
     </div>
 
-    <div [style.opacity]="errorMessage ? 0.5 : 1">
-      <div class="form-group">
-        <label> ბარათის მფლობელი </label>
+    <div class="content-wrapper" [style.opacity]="errorMessage ? 0.5 : 1">
+      <div class="form-section">
+        <div class="payment-form">
+          <h3>ბარათის მონაცემები</h3>
 
-        <input type="text" [(ngModel)]="cardName" [disabled]="!!errorMessage" />
+          <div class="form-group">
+            <label> ბარათის მფლობელი </label>
+
+            <input type="text" [(ngModel)]="cardName" [disabled]="!!errorMessage" />
+          </div>
+
+          <div class="form-group">
+            <label> ბარათის ნომერი </label>
+
+            <input
+              type="text"
+              maxlength="16"
+              [(ngModel)]="cardNumber"
+              [disabled]="!!errorMessage"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label> Expiry </label>
+
+              <input
+                type="text"
+                placeholder="MM/YY"
+                [(ngModel)]="expiryDate"
+                [disabled]="!!errorMessage"
+              />
+            </div>
+
+            <div class="form-group">
+              <label> CVV </label>
+
+              <input type="text" maxlength="3" [(ngModel)]="cvv" [disabled]="!!errorMessage" />
+            </div>
+          </div>
+
+          <button class="pay-btn" (click)="processPayment()" [disabled]="isProcessing || !!errorMessage">
+            {{ isProcessing ? 'იტვირთება...' : 'გადახდა' }}
+          </button>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label> ბარათის ნომერი </label>
-
-        <input type="text" maxlength="16" [(ngModel)]="cardNumber" [disabled]="!!errorMessage" />
-      </div>
-
-      <div class="form-group">
-        <label> Expiry </label>
-
-        <input
-          type="text"
-          placeholder="MM/YY"
-          [(ngModel)]="expiryDate"
-          [disabled]="!!errorMessage"
-        />
-      </div>
-
-      <div class="form-group">
-        <label> CVV </label>
-
-        <input type="text" maxlength="3" [(ngModel)]="cvv" [disabled]="!!errorMessage" />
-      </div>
-
-      <h3>
-        ჯამი:
-        {{ totalPrice }} ₾
-      </h3>
-
-      <button (click)="processPayment()" [disabled]="isProcessing || !!errorMessage">
-        {{ isProcessing ? 'იტვირთება...' : 'გადახდა' }}
-      </button>
+      <aside class="invoice-section">
+        <div class="invoice">
+          <h3>ინვოისი</h3>
+          <div class="invoice-total">
+            <strong>ჯამი:</strong>
+            <span class="total-price">{{ totalPrice }} ₾</span>
+          </div>
+        </div>
+      </aside>
     </div>
   </div>
 

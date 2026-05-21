@@ -36,14 +36,14 @@ export class Service {
 
   register(data: RegisterRequest): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}/Users/register`,
+      `${this.apiUrl}/users/register`,
       data
     );
   }
 
   login(data: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
-      `${this.apiUrl}/Users/login`,
+      `${this.apiUrl}/users/login`,
       data
     );
   }

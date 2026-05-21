@@ -377,3 +377,51 @@
     padding: 24px;
   }
 }
+
+@media (max-width: 520px) {
+  .home-container {
+    padding: 12px;
+  }
+
+  .hero {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .eyebrow {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .search-panel {
+    padding: 18px;
+  }
+
+  .panel-header h2 {
+    font-size: 24px;
+  }
+
+  .form-group select,
+  .form-group input,
+  .search-btn,
+  .ticket-check-btn {
+    min-height: 48px;
+    border-radius: 14px;
+  }
+
+  .info-section {
+    margin-top: 20px;
+    gap: 14px;
+  }
+
+  .info-card {
+    padding: 20px;
+    border-radius: 20px;
+  }
+}

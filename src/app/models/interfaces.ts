@@ -131,19 +131,19 @@ export interface AuthResponse {
   phoneNumber: string;
   email: string;
 }
-// export interface RegisterUserConfig {
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   phoneNumber: string;
-//   password: string;
-//   role: string;
-// }
+export interface RegisterUserConfig {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  role: string;
+}
 
-// export interface LoginConfig {
-//   phoneNumber: string;
-//   password: string;
-// }
+export interface LoginConfig {
+  phoneNumber: string;
+  password: string;
+}
 
 // export interface AuthResponse {
 //   token: string;

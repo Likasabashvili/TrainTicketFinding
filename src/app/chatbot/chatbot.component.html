@@ -12,7 +12,7 @@
   <div class="api-key-section">
     <label>🔑 Gemini API Key:</label>
     <input type="password" [(ngModel)]="apiKey" placeholder="ჩასვით თქვენი Gemini API key..." />
-    <small>API key გამოიყენება მხოლოდ ამ სეშნში (ზღვრად არ დაინახება)</small>
+    <small>API key გამოიყენება მხოლოდ ამ ინფუთში (არ გამოჩნდება)</small>
   </div>
 
   <!-- მესიჯები -->
@@ -20,7 +20,7 @@
     <div class="welcome" *ngIf="showWelcome">
       <div class="emoji">🚂</div>
       <p><strong>კეთილი იყოს თქვენი მობრძანება!</strong></p>
-      <p>მე ვაკეთებ დახმარება მატარებლის ბილეთების შესახებ</p>
+      <p>მე შემიძლია დახმარება მატარებლის ბილეთების ჯავშნის შესახებ</p>
       <p style="margin-top: 16px; font-size: 13px">შეკითხვის მაგალითები:</p>
       <ul class="example-questions">
         <li *ngFor="let question of exampleQuestions">{{ question }}</li>

@@ -232,3 +232,13 @@ a:hover {
     border-radius: 14px;
   }
 }
+
+@media (max-width: 340px) {
+  .auth-container {
+    padding: 12px 8px;
+  }
+
+  .auth-card {
+    padding: 16px;
+  }
+}

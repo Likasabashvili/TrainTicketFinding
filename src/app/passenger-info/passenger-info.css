@@ -690,3 +690,50 @@
     font-size: 20px;
   }
 }
+
+@media (max-width: 520px) {
+  .form-section,
+  .invoice-section {
+    min-width: 0;
+  }
+
+  .invoice-item,
+  .invoice-total,
+  .modal-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .confirm-btn {
+    width: 100%;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+    align-items: flex-end;
+  }
+
+  .modal-content {
+    max-height: 88vh;
+    border-radius: 20px;
+  }
+
+  .modal-header h3 {
+    font-size: 22px;
+  }
+
+  .vagon-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vagon-btn {
+    padding: 0 10px;
+  }
+
+  .seats-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+}

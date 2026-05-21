@@ -14,6 +14,7 @@ import { AuthResponse } from '../models/interfaces';
 export class HeaderComponent implements OnInit {
   isAuthenticated$ = false;
   currentUser: AuthResponse | null = null;
+  isMenuOpen = false;
 
   constructor(
     private router: Router,
@@ -42,28 +43,42 @@ export class HeaderComponent implements OnInit {
     return this.router.url === '/help';
   }
 
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
+
   goHome() {
     this.router.navigate(['/']);
+    this.closeMenu();
   }
 
   goToTicketCheck() {
     this.router.navigate(['/ticket-check']);
+    this.closeMenu();
   }
 
   goToHelp() {
     this.router.navigate(['/help']);
+    this.closeMenu();
   }
 
   goToLogin() {
     this.router.navigate(['/login']);
+    this.closeMenu();
   }
 
   goToRegister() {
     this.router.navigate(['/register']);
+    this.closeMenu();
   }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+    this.closeMenu();
   }
 }

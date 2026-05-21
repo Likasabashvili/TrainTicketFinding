@@ -64,7 +64,8 @@
 //       });
 //   }
 // }
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -91,6 +92,7 @@ export class LoginComponent {
     private service: Service,
     private authService: AuthService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   login() {
@@ -111,18 +113,41 @@ export class LoginComponent {
         next: (response: AuthResponse) => {
           this.isLoading = false;
 
+          if (!response?.token) {
+            this.authService.logout();
+            this.errorMessage = 'ავტორიზაცია ვერ შესრულდა';
+            return;
+          }
+
           this.authService.setUser(response);
 
           this.router.navigate(['/']);
         },
 
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           this.isLoading = false;
+          this.authService.logout();
 
           console.error(err);
 
-          this.errorMessage = err.error?.message || err.error || 'მომხმარებელი ან პაროლი არასწორია';
+          this.errorMessage = this.getLoginErrorMessage(err);
+          this.cdr.detectChanges();
         },
       });
+  }
+
+  private getLoginErrorMessage(err: HttpErrorResponse): string {
+    const backendMessage =
+      typeof err.error === 'string' ? err.error : err.error?.message || err.message;
+
+    if (backendMessage === 'Wrong Password') {
+      return 'პაროლი არასწორია';
+    }
+
+    if (backendMessage === 'User Not Found') {
+      return 'მომხმარებელი ვერ მოიძებნა';
+    }
+
+    return backendMessage || 'მომხმარებელი ან პაროლი არასწორია';
   }
 }
