@@ -54,6 +54,18 @@ export class Home implements OnInit {
   }
 
   searchTrains() {
+    this.errorMessage = '';
+
+    if (!this.fromStation || !this.toStation || !this.travelDate) {
+      this.errorMessage = 'გთხოვთ შეავსოთ ყველა ველი';
+      return;
+    }
+
+    if (this.fromStation === this.toStation) {
+      this.errorMessage = 'საწყისი და დანიშნულების სადგური განსხვავებული უნდა იყოს';
+      return;
+    }
+
     if (!this.isSearchFormValid()) {
       this.errorMessage = 'გთხოვთ შეავსოთ ყველა ველი';
       return;

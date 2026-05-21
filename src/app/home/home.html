@@ -6,7 +6,7 @@
       <p class="hero-copy">აირჩიე მიმართულება, თარიღი და ნახე ხელმისაწვდომი რეისები რამდენიმე წამში.</p>
     </div>
 
-    <form class="search-panel" (submit)="$event.preventDefault(); searchTrains()">
+    <form class="search-panel" (ngSubmit)="searchTrains()">
       <div class="panel-header">
         <div>
           <span class="panel-label">რეისის ძებნა</span>
@@ -57,7 +57,7 @@
         </label>
       </div>
 
-      <button type="submit" [disabled]="!isSearchFormValid() || isLoading" class="search-btn">
+      <button type="submit" [disabled]="isLoading" class="search-btn">
         <span *ngIf="!isLoading">მატარებლის მოძებნა</span>
         <span *ngIf="isLoading">იტვირთება...</span>
       </button>
