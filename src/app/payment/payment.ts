@@ -617,6 +617,10 @@ export class PaymentComponent {
     );
   }
 
+  onCardNumberChange(value: string): void {
+    this.cardNumber = value.replace(/\D/g, '').slice(0, 16);
+  }
+
   processPayment() {
     if (!this.isPaymentFormValid()) {
       this.errorMessage = 'გთხოვთ შეავსოთ საკრედიტო ბარათის ყველა აუცილებელი ველი';

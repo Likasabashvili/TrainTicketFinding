@@ -49,7 +49,8 @@ export class Home implements OnInit {
       this.fromStation &&
       this.toStation &&
       this.travelDate &&
-      this.fromStation !== this.toStation
+      this.fromStation !== this.toStation &&
+      !this.isPastDate(this.travelDate)
     );
   }
 
@@ -63,6 +64,11 @@ export class Home implements OnInit {
 
     if (this.fromStation === this.toStation) {
       this.errorMessage = 'საწყისი და დანიშნულების სადგური განსხვავებული უნდა იყოს';
+      return;
+    }
+
+    if (this.isPastDate(this.travelDate)) {
+      this.errorMessage = 'წარსულ თარიღზე ბილეთის დაჯავშნა შეუძლებელია';
       return;
     }
 
@@ -90,5 +96,9 @@ export class Home implements OnInit {
 
   getToday(): string {
     return new Date().toISOString().split('T')[0];
+  }
+
+  private isPastDate(date: string): boolean {
+    return date < this.getToday();
   }
 }

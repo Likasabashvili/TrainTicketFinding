@@ -31,7 +31,10 @@
             <input
               type="text"
               maxlength="16"
+              inputmode="numeric"
+              pattern="[0-9]*"
               [(ngModel)]="cardNumber"
+              (ngModelChange)="onCardNumberChange($event)"
               [disabled]="!!errorMessage"
             />
           </div>
